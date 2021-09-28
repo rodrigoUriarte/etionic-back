@@ -1,12 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\ForoController;
-use App\Http\Controllers\API\InteraccionController;
+use App\Http\Controllers\API\ItemController;
 use App\Http\Controllers\API\LoginController;
-use App\Http\Controllers\API\PermisoController;
-use App\Http\Controllers\API\PreguntaController;
-use App\Http\Controllers\API\RespuestaController;
-use App\Http\Controllers\API\RolController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +20,6 @@ Route::group([
     'middleware' => ['auth:sanctum'],
 ], function(){
     Route::apiResource('usuarios', UserController::class);
+    Route::apiResource('items', ItemController::class);
 });
 Route::post('/login', LoginController::class);

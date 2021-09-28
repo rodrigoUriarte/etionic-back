@@ -15,6 +15,7 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('item_id')->unique();
             $table->string('title');
             $table->string('url');
             $table->timestamps();

@@ -29,12 +29,9 @@ class LoginController extends Controller
 
         $token = $user->createToken('my-app-token')->plainTextToken;
 
-        $permissions = $user->getAllPermissions()->pluck('name');
-
         $response = [
             'user' => $user,
-            'token' => $token,
-            'permissions' => $permissions
+            'token' => $token
         ];
 
         return response($response, 201);

@@ -5,9 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
-use App\Http\Resources\User as ResourcesUser;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserDashboard;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,7 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return new UserCollection(User::with('roles')->get());
+        return UserResource::collection(User::all())
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -31,17 +31,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //$validated = $request->validated();
+        $user =  User::create([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'password'=>Hash::make($request->password)
+        ]);
 
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
-        $roles = collect($request->roles)->pluck('id');
-        $user->syncRoles($roles);
-        
-        return (new ResourcesUser($user))
+        return (new UserResource($user))
             ->response()
             ->setStatusCode(201);
     }
@@ -54,7 +50,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return new ResourcesUser(User::findOrFail($id));
+        return (new UserResource(User::findOrFail($id)))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**
@@ -73,10 +71,8 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
-        $roles = collect($request->roles)->pluck('id');
-        $user->syncRoles($roles);
 
-        return (new ResourcesUser($user))
+        return (new UserResource($user))
             ->response()
             ->setStatusCode(201);
     }
@@ -95,10 +91,4 @@ class UserController extends Controller
         return response()->json(null, 204);
     }
 
-    public function preguntas($id)
-    {
-        $user = User::with('preguntas')->findOrFail($id);
-
-        return new UserDashboard($user);
-    }
 }
