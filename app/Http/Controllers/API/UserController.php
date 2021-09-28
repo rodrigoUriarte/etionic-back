@@ -50,7 +50,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return (new UserResource(User::findOrFail($id)))
+        return (new UserResource(User::findOrFail($id)->loadMissing('items')))
             ->response()
             ->setStatusCode(200);
     }

@@ -16,8 +16,9 @@ class ItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'itemId' => $this->item_id,
             'title' => $this->title,
-            'title' => $this->url,
+            'url' => $this->url,
             'users' => UserResource::collection($this->whenLoaded('users')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
